@@ -1,6 +1,5 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <project>
-  <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
@@ -28,12 +27,6 @@
             </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>Sequence</name>
-          <description></description>
-          <defaultValue>1</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>Stage</name>
           <description></description>
@@ -41,51 +34,15 @@
             <a class="string-array">
               <string>prd</string>
               <string>dev</string>
-              <string>qa</string>
-              <string>uat</string>
             </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>BastionAmiId</name>
-          <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>CidrClassB</name>
+          <name>Sequence</name>
           <description></description>
           <defaultValue>1</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>Domain</name>
-          <description></description>
-          <defaultValue>none</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>NatAmiId</name>
-          <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>CloudFormationBucket</name>
-          <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.ChoiceParameterDefinition>
-          <name>TwoAvailabilityZones</name>
-          <description></description>
-          <choices class="java.util.Arrays$ArrayList">
-            <a class="string-array">
-              <string>false</string>
-              <string>true</string>
-            </a>
-          </choices>
-        </hudson.model.ChoiceParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.3">
@@ -107,7 +64,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>*/master</name>
+        <name>*/feature/api-gateway</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -122,11 +79,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>rm -rf .git/
-
-aws s3 sync ./ s3://$CloudFormationBucket/cloudformation/
-
-aws cloudformation deploy --region $Region --template-file vpc/cloudformation.yaml --stack-name $Name-$Stage-$Sequence-vpc --parameter-overrides BastionAmiId=$BastionAmiId CidrClassB=$CidrClassB Domain=$Domain Name=$Name NatAmiId=$NatAmiId Sequence=$Sequence StackUrl=https://s3.amazonaws.com/$CloudFormationBucket/cloudformation Stage=$Stage TwoAvailabilityZones=$TwoAvailabilityZones --capabilities CAPABILITY_NAMED_IAM</command>
+      <command>aws cloudformation deploy --region $Region --template-file api-gateway/v1/api-gateway.yaml --stack-name $Name-$Stage-$Sequence-api-gateway-v1 --parameter-overrides Name=$Name Sequence=$Sequence Stage=$Stage</command>
       <configuredLocalRules/>
     </hudson.tasks.Shell>
   </builders>

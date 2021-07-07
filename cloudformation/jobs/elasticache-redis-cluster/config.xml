@@ -1,5 +1,6 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <project>
+  <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
@@ -39,12 +40,6 @@
         </hudson.model.ChoiceParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>Sequence</name>
-          <description></description>
-          <defaultValue>1</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>NumCacheNodes</name>
           <description></description>
           <defaultValue>1</defaultValue>
           <trim>false</trim>
@@ -114,6 +109,8 @@
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.3">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
       <categories class="java.util.concurrent.CopyOnWriteArrayList"/>
       <throttleEnabled>false</throttleEnabled>
       <throttleOption>project</throttleOption>
@@ -145,7 +142,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>aws cloudformation deploy --region $Region --template-file elasticache/redis-cluster.yaml --stack-name $ClusterName-$Stage-$Sequence-redis-cluster --parameter-overrides ClusterName=$ClusterName CreatePrimaryCluster=$CreatePrimaryCluster InstanceType=$InstanceType MultiAz=$MultiAz NumCacheNodes=$NumCacheNodes NumNodeGroups=$NumNodeGroups ReplicasPerNodeGroup=$ReplicasPerNodeGroup Sequence=$Sequence Stage=$Stage SubnetIds=$SubnetIds VpcId=$VpcId</command>
+      <command>aws cloudformation deploy --region $Region --template-file elasticache/redis-cluster.yaml --stack-name $ClusterName-$Stage-$Sequence-redis-cluster --parameter-overrides ClusterName=$ClusterName CreatePrimaryCluster=$CreatePrimaryCluster InstanceType=$InstanceType MultiAz=$MultiAz NumNodeGroups=$NumNodeGroups ReplicasPerNodeGroup=$ReplicasPerNodeGroup Sequence=$Sequence Stage=$Stage SubnetIds=$SubnetIds VpcId=$VpcId</command>
       <configuredLocalRules/>
     </hudson.tasks.Shell>
   </builders>

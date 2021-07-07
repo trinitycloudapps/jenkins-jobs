@@ -100,6 +100,7 @@
               <string>t3.nano</string>
               <string>t3.micro</string>
               <string>t3.small</string>
+              <string>t3.medium</string>
               <string>c5.large</string>
               <string>r5.large</string>
             </a>
@@ -126,7 +127,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>*/master</name>
+        <name>master</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>

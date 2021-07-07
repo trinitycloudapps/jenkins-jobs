@@ -10,12 +10,6 @@
     </com.sonyericsson.rebuild.RebuildSettings>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.StringParameterDefinition>
-          <name>Name</name>
-          <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>Region</name>
           <description></description>
@@ -28,12 +22,6 @@
             </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>Sequence</name>
-          <description></description>
-          <defaultValue>1</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>Stage</name>
           <description></description>
@@ -41,51 +29,39 @@
             <a class="string-array">
               <string>prd</string>
               <string>dev</string>
-              <string>qa</string>
-              <string>uat</string>
             </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>BastionAmiId</name>
-          <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>CidrClassB</name>
+          <name>Sequence</name>
           <description></description>
           <defaultValue>1</defaultValue>
-          <trim>false</trim>
+          <trim>true</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>Domain</name>
-          <description></description>
-          <defaultValue>none</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>NatAmiId</name>
+          <name>BuildSubnetId</name>
           <description></description>
           <defaultValue></defaultValue>
-          <trim>false</trim>
+          <trim>true</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>CloudFormationBucket</name>
+          <name>BuildInstanceProfile</name>
           <description></description>
           <defaultValue></defaultValue>
-          <trim>false</trim>
+          <trim>true</trim>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.ChoiceParameterDefinition>
-          <name>TwoAvailabilityZones</name>
+        <hudson.model.StringParameterDefinition>
+          <name>BuildInstanceType</name>
           <description></description>
-          <choices class="java.util.Arrays$ArrayList">
-            <a class="string-array">
-              <string>false</string>
-              <string>true</string>
-            </a>
-          </choices>
-        </hudson.model.ChoiceParameterDefinition>
+          <defaultValue></defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BuildSecurityGroupId</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.3">
@@ -107,7 +83,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>*/master</name>
+        <name>feature/ec2-image-builder</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -122,11 +98,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>rm -rf .git/
-
-aws s3 sync ./ s3://$CloudFormationBucket/cloudformation/
-
-aws cloudformation deploy --region $Region --template-file vpc/cloudformation.yaml --stack-name $Name-$Stage-$Sequence-vpc --parameter-overrides BastionAmiId=$BastionAmiId CidrClassB=$CidrClassB Domain=$Domain Name=$Name NatAmiId=$NatAmiId Sequence=$Sequence StackUrl=https://s3.amazonaws.com/$CloudFormationBucket/cloudformation Stage=$Stage TwoAvailabilityZones=$TwoAvailabilityZones --capabilities CAPABILITY_NAMED_IAM</command>
+      <command>aws cloudformation deploy --region $Region --template-file ec2/image-builder/laravel-nginx-server.yml --stack-name ubuntu-$Stage-$Sequence-laravel-nginx-server-image --parameter-overrides BuildSubnetId=$BuildSubnetId BuildInstanceProfile=$BuildInstanceProfile BuildInstanceType=$BuildInstanceType BuildSecurityGroupId=$BuildSecurityGroupId Sequence=$Sequence Stage=$Stage</command>
       <configuredLocalRules/>
     </hudson.tasks.Shell>
   </builders>
